@@ -35,7 +35,9 @@ module.exports.getUser = (req, res) => {
       }
     })
     .catch((err) => {
-      if (err.message === "Not found") {
+      if (err.name === "CastError") {
+        res.status(BAD_DATA_ERROR).send({ message: "Некорректный Id" });
+      } else if (err.message === "Not found") {
         res.status(NOT_FOUND_ERROR).send({ message: "Пользователь не найден" });
       } else {
         res.status(DEFAULT_ERROR).send({ message: "Что-то пошло не так..." });
@@ -64,7 +66,7 @@ module.exports.updateProfile = (req, res) => {
     .orFail(() => {
       throw new Error("Not found");
     })
-    .then((user) => res.status(COMPLETED).send({ data: user }))
+    .then((user) => res.status(200).send({ data: user }))
     .catch((err) => {
       if (err.message === "Not found") {
         res.status(NOT_FOUND_ERROR).send({ message: "Пользователь не найден" });
@@ -92,7 +94,7 @@ module.exports.updateAvatar = (req, res) => {
     .orFail(() => {
       throw new Error("Not found");
     })
-    .then((userAvatar) => res.status(COMPLETED).send({ data: userAvatar }))
+    .then((userAvatar) => res.status(200).send({ data: userAvatar }))
     .catch((err) => {
       if (err.message === "Not found") {
         res.status(NOT_FOUND_ERROR).send({ message: "Пользователь не найден" });
