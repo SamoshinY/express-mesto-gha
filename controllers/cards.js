@@ -8,6 +8,7 @@ const {
 
 module.exports.getCards = (req, res) => {
   Card.find({})
+    .populate(["owner", "likes"])
     .then((cards) => res.send({ data: cards }))
     .catch((err) =>
       res.status(DEFAULT_ERROR).send({ message: "Что-то пошло не так..." })
@@ -57,17 +58,13 @@ module.exports.likeCard = (req, res) =>
     .orFail(() => {
       throw new Error("Not found");
     })
+    .populate(["owner", "likes"])
     .then((card) => res.status(200).send({ data: card }))
     .catch((err) => {
       if (err.name === "CastError") {
         res.status(BAD_DATA_ERROR).send({ message: "Некорректный Id" });
       } else if (err.message === "Not found") {
         res.status(NOT_FOUND_ERROR).send({ message: "Карточка не найдена" });
-      } else if (err.name === "ValidationError") {
-        const message = Object.values(err.errors)
-          .map((e) => e.message)
-          .join(", ");
-        res.status(BAD_DATA_ERROR).send({ message });
       } else {
         res.status(DEFAULT_ERROR).send({ message: "Что-то пошло не так..." });
       }
@@ -82,17 +79,13 @@ module.exports.dislikeCard = (req, res) =>
     .orFail(() => {
       throw new Error("Not found");
     })
+    .populate(["owner", "likes"])
     .then((card) => res.status(200).send({ data: card }))
     .catch((err) => {
       if (err.name === "CastError") {
         res.status(BAD_DATA_ERROR).send({ message: "Некорректный Id" });
       } else if (err.message === "Not found") {
         res.status(NOT_FOUND_ERROR).send({ message: "Карточка не найдена" });
-      } else if (err.name === "ValidationError") {
-        const message = Object.values(err.errors)
-          .map((e) => e.message)
-          .join(", ");
-        res.status(BAD_DATA_ERROR).send({ message });
       } else {
         res.status(DEFAULT_ERROR).send({ message: "Что-то пошло не так..." });
       }

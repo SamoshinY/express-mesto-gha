@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 
 const { PORT = 3000 } = process.env;
 const app = express();
-const { userRouter, cardRouter } = require("./routes");
+const router = require("./routes/index");
 
 mongoose.connect("mongodb://127.0.0.1:27017/mestodb");
 
@@ -18,11 +18,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(userRouter);
-app.use(cardRouter);
-app.use("*", (req, res) => {
-  res.status(404).send({ message: "Страница не найдена" });
-});
+app.use(router);
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
