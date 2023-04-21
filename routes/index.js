@@ -1,7 +1,7 @@
 const express = require("express");
 const userRouter = require("./users");
 const cardRouter = require("./cards");
-const { NOT_FOUND_ERROR } = require("../constants/response-status-code");
+const { NOT_FOUND_ERROR } = require("../utils/response-status-code");
 
 const router = express.Router();
 

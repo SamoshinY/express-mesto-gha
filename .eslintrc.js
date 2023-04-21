@@ -16,5 +16,6 @@ module.exports = {
     "function-paren-newline": "off",
     "comma-dangle": "off",
     "no-console": "off",
+    "operator-linebreak": "off",
   },
 };
