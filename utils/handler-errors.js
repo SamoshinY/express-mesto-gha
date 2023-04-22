@@ -9,14 +9,13 @@ const {
 } = require("./response-status-code");
 
 const handlerErrors = (err, res) => {
-  const errMessage = Object.values(err.errors)
-    .map((e) => e.message)
-    .join(", ");
   switch (true) {
     case err instanceof ValidationError:
-      return res
-        .status(BAD_DATA_ERROR)
-        .send({ message: `Введены некорректные двнные: ${errMessage}` });
+      return res.status(BAD_DATA_ERROR).send({
+        message: `Введены некорректные двнные: ${Object.values(err.errors)
+          .map((e) => e.message)
+          .join(", ")}`,
+      });
     case err instanceof DocumentNotFoundError:
       return res
         .status(NOT_FOUND_ERROR)
