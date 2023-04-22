@@ -1,3 +1,4 @@
+/* eslint-disable comma-dangle */
 const User = require("../models/user");
 const { COMPLETED } = require("../utils/response-status-code");
 const { handlerErrors } = require("../utils/handler-errors");

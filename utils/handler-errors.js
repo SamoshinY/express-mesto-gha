@@ -1,3 +1,4 @@
+/* eslint-disable operator-linebreak */
 const { DocumentNotFoundError, ValidationError, CastError } =
   require("mongoose").Error;
 

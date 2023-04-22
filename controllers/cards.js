@@ -1,3 +1,5 @@
+/* eslint-disable comma-dangle */
+/* eslint-disable implicit-arrow-linebreak */
 const Card = require("../models/card");
 const { COMPLETED } = require("../utils/response-status-code");
 const { handlerErrors } = require("../utils/handler-errors");
