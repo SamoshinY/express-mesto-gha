@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 const Card = require("../models/card");
 const { COMPLETED } = require("../utils/response-status-code");
 const { handlerErrors } = require("../utils/handler-errors");
@@ -18,9 +19,19 @@ module.exports.createCard = (req, res) => {
 };
 
 module.exports.deleteCard = (req, res) => {
-  Card.findByIdAndRemove(req.params.cardId)
+  Card.findById(req.params.cardId)
     .orFail()
-    .then((card) => res.send({ data: card }))
+    .then((card) => {
+      if ((card.owner).toString() === req.user._id) {
+        console.log("это моё, можно удалять");
+        Card.findByIdAndRemove(req.params.cardId)
+          .orFail()
+          .then((card) => res.send({ data: card }))
+          .catch((err) => handlerErrors(err, res));
+      } else {
+        throw new Error("нельзя удалять эту карточку, она не моя!)");
+      }
+    })
     .catch((err) => handlerErrors(err, res));
 };
 

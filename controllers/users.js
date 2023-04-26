@@ -9,12 +9,8 @@ module.exports.login = (req, res) => {
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, "some-secret-key", { expiresIn: "7d" });
-      res.cookie("jwt", token, {
-        maxAge: 3600000 * 24 * 7,
-        httpOnly: true,
-      })
-        .end();
+      const token = jwt.sign({ _id: user._id }, "secret-key", { expiresIn: "7d" });
+      res.send({ token });
     })
     .catch((err) => {
       res
@@ -39,12 +35,19 @@ module.exports.createUser = (req, res) => {
     .catch((err) => handlerErrors(err, res));
 };
 
-module.exports.getUser = (req, res) => {
-  User.findById(req.params.userId)
+module.exports.getCurrentUser = (req, res) => {
+  User.findById(req.user._id)
     .orFail()
     .then((user) => res.send({ data: user }))
     .catch((err) => handlerErrors(err, res));
 };
+
+// module.exports.getUser = (req, res) => {
+//   User.findById(req.params.userId)
+//     .orFail()
+//     .then((user) => res.send({ data: user }))
+//     .catch((err) => handlerErrors(err, res));
+// };
 
 module.exports.getUsers = (req, res) => {
   User.find({})
