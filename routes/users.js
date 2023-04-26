@@ -1,7 +1,6 @@
 const userRouter = require("express").Router();
 
 const {
-  createUser,
   getUser,
   getUsers,
   updateProfile,
@@ -11,8 +10,6 @@ const {
 userRouter.get("/", getUsers);
 
 userRouter.get("/:userId", getUser);
-
-userRouter.post("/", createUser);
 
 userRouter.patch("/me", updateProfile);
 
