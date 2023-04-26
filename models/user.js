@@ -1,4 +1,3 @@
-/* eslint-disable comma-dangle */
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema(
@@ -19,8 +18,17 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "Обязательное поле не заполнено"],
     },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
   },
-  { versionKey: false }
+  { versionKey: false },
 );
 
 module.exports = mongoose.model("user", userSchema);

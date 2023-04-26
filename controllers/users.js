@@ -1,4 +1,3 @@
-/* eslint-disable comma-dangle */
 const User = require("../models/user");
 const { COMPLETED } = require("../utils/response-status-code");
 const { handlerErrors } = require("../utils/handler-errors");
@@ -31,7 +30,7 @@ module.exports.updateProfile = (req, res) => {
     {
       new: true,
       runValidators: true,
-    }
+    },
   )
     .orFail()
     .then((user) => res.send({ data: user }))
@@ -46,7 +45,7 @@ module.exports.updateAvatar = (req, res) => {
     {
       new: true,
       runValidators: true,
-    }
+    },
   )
     .orFail()
     .then((userAvatar) => res.send({ data: userAvatar }))

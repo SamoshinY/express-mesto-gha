@@ -1,5 +1,3 @@
-/* eslint-disable comma-dangle */
-/* eslint-disable implicit-arrow-linebreak */
 const Card = require("../models/card");
 const { COMPLETED } = require("../utils/response-status-code");
 const { handlerErrors } = require("../utils/handler-errors");
@@ -26,24 +24,22 @@ module.exports.deleteCard = (req, res) => {
     .catch((err) => handlerErrors(err, res));
 };
 
-module.exports.likeCard = (req, res) =>
-  Card.findByIdAndUpdate(
-    req.params.cardId,
-    { $addToSet: { likes: req.user._id } },
-    { new: true }
-  )
-    .orFail()
-    .populate(["owner", "likes"])
-    .then((card) => res.send({ data: card }))
-    .catch((err) => handlerErrors(err, res));
+module.exports.likeCard = (req, res) => Card.findByIdAndUpdate(
+  req.params.cardId,
+  { $addToSet: { likes: req.user._id } },
+  { new: true },
+)
+  .orFail()
+  .populate(["owner", "likes"])
+  .then((card) => res.send({ data: card }))
+  .catch((err) => handlerErrors(err, res));
 
-module.exports.dislikeCard = (req, res) =>
-  Card.findByIdAndUpdate(
-    req.params.cardId,
-    { $pull: { likes: req.user._id } },
-    { new: true }
-  )
-    .orFail()
-    .populate(["owner", "likes"])
-    .then((card) => res.send({ data: card }))
-    .catch((err) => handlerErrors(err, res));
+module.exports.dislikeCard = (req, res) => Card.findByIdAndUpdate(
+  req.params.cardId,
+  { $pull: { likes: req.user._id } },
+  { new: true },
+)
+  .orFail()
+  .populate(["owner", "likes"])
+  .then((card) => res.send({ data: card }))
+  .catch((err) => handlerErrors(err, res));

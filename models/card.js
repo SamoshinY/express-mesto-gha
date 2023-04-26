@@ -1,4 +1,3 @@
-/* eslint-disable comma-dangle */
 const mongoose = require("mongoose");
 
 const cardSchema = new mongoose.Schema(
@@ -30,7 +29,7 @@ const cardSchema = new mongoose.Schema(
       default: Date.now,
     },
   },
-  { versionKey: false }
+  { versionKey: false },
 );
 
 module.exports = mongoose.model("card", cardSchema);
