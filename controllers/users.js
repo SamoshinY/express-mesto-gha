@@ -56,32 +56,18 @@ module.exports.getUser = (req, res, next) => {
     .catch(next);
 };
 
-module.exports.updateProfile = (req, res, next) => {
-  const { name, about } = req.body;
-  User.findByIdAndUpdate(
-    req.user._id,
-    { name, about },
-    {
-      new: true,
-      runValidators: true,
-    },
-  )
+const updateData = (req, res, next) => {
+  const userData = req.body;
+  User.findByIdAndUpdate(req.user._id, userData, { new: true, runValidators: true })
     .orFail()
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.send({ user }))
     .catch(next);
 };
 
+module.exports.updateProfile = (req, res, next) => {
+  updateData(req, res, next);
+};
+
 module.exports.updateAvatar = (req, res, next) => {
-  const { avatar } = req.body;
-  User.findByIdAndUpdate(
-    req.user._id,
-    { avatar },
-    {
-      new: true,
-      runValidators: true,
-    },
-  )
-    .orFail()
-    .then((userAvatar) => res.send({ data: userAvatar }))
-    .catch(next);
+  updateData(req, res, next);
 };
