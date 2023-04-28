@@ -3,6 +3,8 @@ const BAD_DATA_ERROR = 400;
 const DEFAULT_ERROR = 500;
 const COMPLETED = 201;
 const AUTH_ERROR = 401;
+const FORBIDDEN_ERROR = 403;
+const DUPLICATE_KEY_ERROR = 409;
 
 module.exports = {
   NOT_FOUND_ERROR,
@@ -10,4 +12,6 @@ module.exports = {
   DEFAULT_ERROR,
   COMPLETED,
   AUTH_ERROR,
+  FORBIDDEN_ERROR,
+  DUPLICATE_KEY_ERROR,
 };

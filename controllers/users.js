@@ -2,9 +2,9 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const { COMPLETED } = require("../utils/response-status-code");
-const { handlerErrors } = require("../utils/handler-errors");
+const DuplicateKeyError = require("../utils/errors/DuplicateKeyError");
 
-module.exports.login = (req, res) => {
+module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
   return User.findUserByCredentials(email, password)
@@ -12,14 +12,10 @@ module.exports.login = (req, res) => {
       const token = jwt.sign({ _id: user._id }, "secret-key", { expiresIn: "7d" });
       res.send({ token });
     })
-    .catch((err) => {
-      res
-        .status(401)
-        .send({ message: err.message });
-    });
+    .catch(next);
 };
 
-module.exports.createUser = (req, res) => {
+module.exports.createUser = (req, res, next) => {
   const {
     name, about, avatar, email,
   } = req.body;
@@ -32,30 +28,35 @@ module.exports.createUser = (req, res) => {
       password: hash,
     }))
     .then((user) => res.status(COMPLETED).send({ data: user }))
-    .catch((err) => handlerErrors(err, res));
+    .catch((err) => {
+      if (err.code === 11000) {
+        next(new DuplicateKeyError());
+      }
+      next();
+    });
 };
 
-module.exports.getCurrentUser = (req, res) => {
+module.exports.getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
     .orFail()
     .then((user) => res.send({ data: user }))
-    .catch((err) => handlerErrors(err, res));
+    .catch(next);
 };
 
-// module.exports.getUser = (req, res) => {
-//   User.findById(req.params.userId)
-//     .orFail()
-//     .then((user) => res.send({ data: user }))
-//     .catch((err) => handlerErrors(err, res));
-// };
-
-module.exports.getUsers = (req, res) => {
+module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.send({ data: users }))
-    .catch((err) => handlerErrors(err, res));
+    .catch(next);
 };
 
-module.exports.updateProfile = (req, res) => {
+module.exports.getUser = (req, res, next) => {
+  User.findById(req.params.userId)
+    .orFail()
+    .then((user) => res.send({ data: user }))
+    .catch(next);
+};
+
+module.exports.updateProfile = (req, res, next) => {
   const { name, about } = req.body;
   User.findByIdAndUpdate(
     req.user._id,
@@ -67,10 +68,10 @@ module.exports.updateProfile = (req, res) => {
   )
     .orFail()
     .then((user) => res.send({ data: user }))
-    .catch((err) => handlerErrors(err, res));
+    .catch(next);
 };
 
-module.exports.updateAvatar = (req, res) => {
+module.exports.updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
   User.findByIdAndUpdate(
     req.user._id,
@@ -82,5 +83,5 @@ module.exports.updateAvatar = (req, res) => {
   )
     .orFail()
     .then((userAvatar) => res.send({ data: userAvatar }))
-    .catch((err) => handlerErrors(err, res));
+    .catch(next);
 };

@@ -7,6 +7,7 @@ const app = express();
 const router = require("./routes/index");
 const { login, createUser } = require("./controllers/users");
 const auth = require("./middlewares/auth");
+const errors = require("./middlewares/handler-errors");
 
 mongoose.connect("mongodb://127.0.0.1:27017/mestodb");
 
@@ -17,6 +18,8 @@ app.post("/signin", login);
 app.post("/signup", createUser);
 
 app.use(auth, router);
+
+app.use(errors);
 
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console

@@ -1,41 +1,39 @@
-/* eslint-disable no-shadow */
 const Card = require("../models/card");
 const { COMPLETED } = require("../utils/response-status-code");
-const { handlerErrors } = require("../utils/handler-errors");
+const ForbiddenError = require("../utils/errors/ForbiddenError");
 
-module.exports.getCards = (req, res) => {
+module.exports.getCards = (req, res, next) => {
   Card.find({})
     .populate(["owner", "likes"])
     .then((cards) => res.send({ data: cards }))
-    .catch((err) => handlerErrors(err, res));
+    .catch(next);
 };
 
-module.exports.createCard = (req, res) => {
+module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
   Card.create({ name, link, owner: req.user._id })
     .then((card) => card.populate("owner"))
     .then((card) => res.status(COMPLETED).send({ data: card }))
-    .catch((err) => handlerErrors(err, res));
+    .catch(next);
 };
 
-module.exports.deleteCard = (req, res) => {
+module.exports.deleteCard = (req, res, next) => {
   Card.findById(req.params.cardId)
     .orFail()
     .then((card) => {
       if ((card.owner).toString() === req.user._id) {
-        console.log("это моё, можно удалять");
         Card.findByIdAndRemove(req.params.cardId)
           .orFail()
-          .then((card) => res.send({ data: card }))
-          .catch((err) => handlerErrors(err, res));
+          .then((cardData) => res.send({ data: cardData }))
+          .catch(next);
       } else {
-        throw new Error("нельзя удалять эту карточку, она не моя!)");
+        next(new ForbiddenError());
       }
     })
-    .catch((err) => handlerErrors(err, res));
+    .catch(next);
 };
 
-module.exports.likeCard = (req, res) => Card.findByIdAndUpdate(
+module.exports.likeCard = (req, res, next) => Card.findByIdAndUpdate(
   req.params.cardId,
   { $addToSet: { likes: req.user._id } },
   { new: true },
@@ -43,9 +41,9 @@ module.exports.likeCard = (req, res) => Card.findByIdAndUpdate(
   .orFail()
   .populate(["owner", "likes"])
   .then((card) => res.send({ data: card }))
-  .catch((err) => handlerErrors(err, res));
+  .catch(next);
 
-module.exports.dislikeCard = (req, res) => Card.findByIdAndUpdate(
+module.exports.dislikeCard = (req, res, next) => Card.findByIdAndUpdate(
   req.params.cardId,
   { $pull: { likes: req.user._id } },
   { new: true },
@@ -53,4 +51,4 @@ module.exports.dislikeCard = (req, res) => Card.findByIdAndUpdate(
   .orFail()
   .populate(["owner", "likes"])
   .then((card) => res.send({ data: card }))
-  .catch((err) => handlerErrors(err, res));
+  .catch(next);
