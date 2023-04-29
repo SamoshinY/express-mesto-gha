@@ -2,27 +2,27 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
 const AuthError = require("../utils/errors/AuthError");
-const PATTERN_URL = require("../utils/constants");
+// const PATTERN_URL = require("../utils/constants");
 
 const userSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      default: "Жак-Ив Кусто",
       minlength: [2, "Минимальная длина строки - два символа"],
       maxlength: [30, "Максимальная длина строки - тридцать символов"],
+      default: "Жак-Ив Кусто",
     },
     about: {
       type: String,
-      default: "Исследователь",
       minlength: [2, "Минимальная длина строки - два символа"],
       maxlength: [30, "Максимальная длина строки - тридцать символов"],
+      default: "Исследователь",
     },
     avatar: {
       type: String,
       default: "https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png",
       validate: {
-        validator: (value) => PATTERN_URL.test(value),
+        validator: (value) => validator.isURL(value),
         message: "Некорректная ссылка",
       },
     },

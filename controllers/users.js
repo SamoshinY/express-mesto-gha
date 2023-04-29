@@ -1,7 +1,6 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
-const { COMPLETED } = require("../utils/response-status-code");
 const DuplicateKeyError = require("../utils/errors/DuplicateKeyError");
 
 module.exports.login = (req, res, next) => {
@@ -27,7 +26,9 @@ module.exports.createUser = (req, res, next) => {
       email,
       password: hash,
     }))
-    .then((user) => res.status(COMPLETED).send({ data: user }))
+    .then((user) => res.send({
+      _id: user._id, name: user.name, about: user.about, avatar: user.avatar, email: user.email,
+    }))
     .catch((err) => {
       if (err.code === 11000) {
         next(new DuplicateKeyError());

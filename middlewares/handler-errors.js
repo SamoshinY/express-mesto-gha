@@ -2,6 +2,7 @@ const { DocumentNotFoundError, ValidationError, CastError } = require("mongoose"
 const AuthError = require("../utils/errors/AuthError");
 const DuplicateKeyError = require("../utils/errors/DuplicateKeyError");
 const ForbiddenError = require("../utils/errors/ForbiddenError");
+const NotFoundError = require("../utils/errors/NotFoundError");
 
 const {
   NOT_FOUND_ERROR,
@@ -32,6 +33,8 @@ module.exports = (err, req, res, next) => {
       return res.status(FORBIDDEN_ERROR).send({ message: err.message });
     case err instanceof AuthError:
       return res.status(AUTH_ERROR).send({ message: err.message });
+    case err instanceof NotFoundError:
+      return res.status(NOT_FOUND_ERROR).send({ message: err.message });
     default: res.status(DEFAULT_ERROR).send({ message: `Что-то пошло не так... ${err.name}: ${err.message}` });
   }
   return next();
