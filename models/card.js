@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const PATTERN_URL = require("../utils/constants");
+const validator = require("validator");
 
 const cardSchema = new mongoose.Schema(
   {
@@ -13,7 +13,7 @@ const cardSchema = new mongoose.Schema(
       type: String,
       required: [true, "Обязательное поле не заполнено"],
       validate: {
-        validator: (value) => PATTERN_URL.test(value),
+        validator: (value) => validator.isURL(value),
         message: "Некорректная ссылка",
       },
     },

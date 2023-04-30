@@ -1,1 +1,3 @@
-module.exports = /(https?:\/\/)(w{3}\.)?(((\d{1,3}\.){3}\d{1,3})|((\w-?)+\.(ru|com)))(:\d{2,5})?((\/.+)+)?\/?#?/;
+const PATTERN_URL = /[A-Za-z0-9]+@[A-Za-z0-9]+\.[a-z]{2,}/;
+
+module.exports = PATTERN_URL;

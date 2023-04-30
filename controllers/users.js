@@ -31,9 +31,11 @@ module.exports.createUser = (req, res, next) => {
       email,
       password: hash,
     }))
-    .then((user) => User.findOne(user)
-      .orFail()
-      .then((userData) => res.send(userData)))
+    .then((user) => {
+      const data = user.toObject();
+      delete data.password;
+      res.send(data);
+    })
     .catch((err) => {
       if (err.code === 11000) {
         next(new DuplicateKeyError());
