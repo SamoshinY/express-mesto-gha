@@ -1,6 +1,5 @@
 const userRouter = require("express").Router();
-const { celebrate, Joi } = require("celebrate");
-const PATTERN_URL = require("../utils/constants");
+const { bodyUser, idUser, avatarUser } = require("../middlewares/request-validation");
 
 const {
   getCurrentUser,
@@ -14,21 +13,10 @@ userRouter.get("/", getUsers);
 
 userRouter.get("/me", getCurrentUser);
 
-userRouter.get("/:userId", celebrate({
-  params: Joi.object().keys({ userId: Joi.string().required().hex().length(24) }),
-}), getUser);
+userRouter.get("/:userId", idUser, getUser);
 
-userRouter.patch("/me", celebrate({
-  body: Joi.object().keys({
-    name: Joi.string().required().min(2).max(30),
-    about: Joi.string().required().min(2).max(30),
-  }),
-}), updateProfile);
+userRouter.patch("/me", bodyUser, updateProfile);
 
-userRouter.patch("/me/avatar", celebrate({
-  body: Joi.object().keys({
-    avatar: Joi.string().required().regex(PATTERN_URL),
-  }),
-}), updateAvatar);
+userRouter.patch("/me/avatar", avatarUser, updateAvatar);
 
 module.exports = userRouter;

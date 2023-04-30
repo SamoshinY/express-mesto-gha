@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require("express");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
@@ -12,13 +14,13 @@ const rateLimiter = require("./middlewares/rate-limiter");
 
 mongoose.connect("mongodb://127.0.0.1:27017/mestodb");
 
-app.use(express.json());
-app.use(helmet());
-app.use(rateLimiter);
-app.use(cookieParser());
-app.use(router);
-app.use(errors());
-app.use(errorsHandler);
+app.use(express.json())
+  .use(helmet())
+  .use(rateLimiter)
+  .use(cookieParser())
+  .use(router)
+  .use(errors())
+  .use(errorsHandler);
 
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console
