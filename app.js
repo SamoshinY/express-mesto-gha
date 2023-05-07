@@ -11,14 +11,18 @@ const { errors } = require("celebrate");
 const router = require("./routes/index");
 const errorsHandler = require("./middlewares/handler-errors");
 const rateLimiter = require("./middlewares/rate-limiter");
+const { requestLogger, errorLogger } = require("./middlewares/logger");
 
 mongoose.connect("mongodb://127.0.0.1:27017/mestodb");
 
-app.use(express.json())
+app
+  .use(express.json())
   .use(helmet())
   .use(rateLimiter)
   .use(cookieParser())
+  .use(requestLogger)
   .use(router)
+  .use(errorLogger)
   .use(errors())
   .use(errorsHandler);
 
