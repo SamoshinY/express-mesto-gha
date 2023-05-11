@@ -19,8 +19,9 @@ module.exports.login = (req, res, next) => {
         maxAge: 3600000 * 24 * 7,
         httpOnly: true,
         sameSite: true,
+        // secure: true,
       });
-      res.send({ message: "Вы успешно прошли авторизацию!" });
+      res.json({ message: "Вы успешно прошли авторизацию!" });
     })
     .catch(next);
 };
@@ -29,7 +30,8 @@ module.exports.createUser = (req, res, next) => {
   const {
     name, about, avatar, email,
   } = req.body;
-  bcrypt.hash(req.body.password, 10)
+  bcrypt
+    .hash(req.body.password, 10)
     .then((hash) => User.create({
       name,
       about,
@@ -72,7 +74,10 @@ module.exports.getUser = (req, res, next) => {
 
 const updateData = (req, res, next) => {
   const userData = req.body;
-  User.findByIdAndUpdate(req.user._id, userData, { new: true, runValidators: true })
+  User.findByIdAndUpdate(req.user._id, userData, {
+    new: true,
+    runValidators: true,
+  })
     .orFail()
     .then((user) => res.send(user))
     .catch(next);

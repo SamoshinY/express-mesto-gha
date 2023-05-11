@@ -17,9 +17,9 @@ const corsHandler = require("./middlewares/cors-processing");
 mongoose.connect("mongodb://127.0.0.1:27017/mestodb");
 
 app
+  .use(corsHandler)
   .use(express.json())
   .use(helmet())
-  .use(corsHandler)
   .use(rateLimiter)
   .use(cookieParser())
   .use(requestLogger)
