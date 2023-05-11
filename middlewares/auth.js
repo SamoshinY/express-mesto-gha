@@ -7,13 +7,16 @@ module.exports = (req, res, next) => {
   const token = req.cookies.jwt;
 
   if (!token) {
-    return next(new AuthError("Требуется авторизация!"));
+    return next(/* new AuthError("Требуется авторизация!") */);
   }
 
   let payload;
 
   try {
-    payload = jwt.verify(token, NODE_ENV === "production" ? JWT_SECRET : "dev-secret");
+    payload = jwt.verify(
+      token,
+      NODE_ENV === "production" ? JWT_SECRET : "dev-secret",
+    );
   } catch (err) {
     return next(new AuthError("Требуется авторизация!"));
   }
